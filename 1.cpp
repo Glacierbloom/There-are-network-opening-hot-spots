@@ -3,6 +3,9 @@
 #include <chrono>
 #include <thread>
 #include <future>
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
 
 // WinRT头文件
 #include <winrt/Windows.Networking.Connectivity.h>
@@ -48,12 +51,21 @@ int main()
     try
     {
 
+        // 设置控制台输出编码为 UTF-8
+        SetConsoleCP(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
+        _setmode(_fileno(stdout), _O_U8TEXT);
+        _setmode(_fileno(stderr), _O_U8TEXT);
+        
+        // 刷新输出缓冲区
+        // setvbuf(stdout, nullptr, _IONBF, 0);
+
+        std::wcout << L"程序已启动" << std::endl;
+
         // 初始化 WinRT
         init_apartment();
 
-        std::cout
-            << "开始初始化热点服务..."
-            << std::endl;
+        std::wcout << L"开始初始化热点服务..."  << std::endl;
 
         // =================================================
         // 获取当前互联网连接
@@ -64,17 +76,15 @@ int main()
 
         if (!当前网络配置)
         {
-            std::cout
-                << "未检测到可用网络"
+            std::wcout
+                << L"未检测到可用网络"
                 << std::endl;
 
             return 0;
         }
 
-        std::wcout
-            << L"当前网络："
-            << 当前网络配置.ProfileName()
-            << std::endl;
+        auto 网络名称 = 当前网络配置.ProfileName();
+        std::wcout << L"当前网络：" << 网络名称.c_str() << std::endl;
 
         // =================================================
         // 创建热点管理器
@@ -101,8 +111,8 @@ int main()
 
         if (!热点管理器)
         {
-            std::cout
-                << "无法创建热点管理器"
+            std::wcout
+                << L"无法创建热点管理器"
                 << std::endl;
 
             return 0;
@@ -124,8 +134,8 @@ int main()
             TetheringOperationalState::On)
         {
 
-            std::cout
-                << "检测到热点已经开启"
+            std::wcout
+                << L"检测到热点已经开启"
                 << std::endl;
 
             // 等待系统完成WPA初始化
@@ -139,8 +149,8 @@ int main()
         // 启动热点
         // =================================================
 
-        std::cout
-            << "正在启动热点..."
+        std::wcout
+            << L"正在启动热点..."
             << std::endl;
 
         try
@@ -154,8 +164,8 @@ int main()
             // 等待完成
             异步任务.get();
 
-            std::cout
-                << "热点启动成功"
+            std::wcout
+                << L"热点启动成功"
                 << std::endl;
         }
         catch (hresult_error const &e)
@@ -175,26 +185,26 @@ int main()
             热点管理器
                 .TetheringOperationalState();
 
-        std::cout
-            << "当前热点状态:";
+        std::wcout
+            << L"当前热点状态:";
 
         switch (最终状态)
         {
 
         case TetheringOperationalState::On:
-            std::cout << "ON";
+            std::wcout << L"ON";
             break;
 
         case TetheringOperationalState::Off:
-            std::cout << "OFF";
+            std::wcout << L"OFF";
             break;
 
         case TetheringOperationalState::InTransition:
-            std::cout << "TRANSITION";
+            std::wcout << L"TRANSITION";
             break;
         }
 
-        std::cout << std::endl;
+        std::wcout << std::endl;
     }
     catch (hresult_error const &e)
     {
@@ -207,9 +217,9 @@ int main()
     catch (std::exception const &e)
     {
 
-        std::cerr
-            << "异常:"
-            << e.what()
+        std::wcerr
+            << L"异常:"
+            << std::wstring(e.what(), e.what() + std::strlen(e.what())).c_str()
             << std::endl;
     }
 
@@ -217,8 +227,8 @@ int main()
     // 退出等待
     // =================================================
 
-    std::cout
-        << "按回车退出，5秒自动退出..."
+    std::wcout
+        << L"按回车退出，5秒自动退出..."
         << std::endl;
 
     auto 等待输入 =
@@ -238,13 +248,13 @@ int main()
         std::future_status::timeout)
     {
 
-        std::cout
-            << "超时退出"
+        std::wcout
+            << L"超时退出"
             << std::endl;
     }
 
-    std::cout
-        << "程序退出"
+    std::wcout
+        << L"程序退出"
         << std::endl;
 
     return 0;
