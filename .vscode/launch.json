@@ -5,7 +5,7 @@
             "name": "C/C++: cl.exe 构建和调试活动文件",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "program": "${fileDirname}\\bin\\${fileBasenameNoExtension}.exe",
             "args": [
                
             ],

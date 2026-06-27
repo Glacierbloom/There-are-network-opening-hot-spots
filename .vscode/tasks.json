@@ -9,7 +9,7 @@
                 "/EHsc",
                 "/std:c++17",
                 "/nologo",
-                "/Fe${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "/Fe${fileDirname}\\bin\\${fileBasenameNoExtension}.exe",
                 "${file}",
                 "/link",
                 "windowsapp.lib",
@@ -17,7 +17,7 @@
                 "oleaut32.lib"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${fileDirname}\\bin"
             },
             "problemMatcher": [
                 "$msCompile"
