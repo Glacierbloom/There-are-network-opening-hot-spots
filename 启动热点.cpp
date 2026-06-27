@@ -7,7 +7,6 @@
 #include <iostream>  // std::wcout, std::wcerr, std::endl 等宽字符输入输出
 #include <chrono>    // std::chrono::seconds, milliseconds 等时间工具
 #include <thread>    // std::this_thread::sleep_for 当前线程休眠
-#include <future>    // std::async, std::future_status 异步任务与超时判断
 #include <windows.h> // SetConsoleCP, SetConsoleOutputCP, CP_UTF8 等控制台编码设置
 #include <io.h>      // _setmode 设置文件流模式
 #include <fcntl.h>   // _O_U8TEXT 以 UTF-8 文本模式打开流
